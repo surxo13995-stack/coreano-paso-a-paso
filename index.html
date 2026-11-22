@@ -1,0 +1,221 @@
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#101a2a"><title>Coreano paso a paso</title><style>
+:root{font-family:system-ui,-apple-system,sans-serif;color:#e9f2ff;background:#0b1321}*{box-sizing:border-box}body{margin:0;padding:12px}.app{max-width:620px;margin:auto}h1{font-size:21px;margin:6px 0}p{margin:5px 0 12px;color:#b4c3d7;font-size:13px}.card{background:#172439;border:1px solid #30435d;border-radius:16px;padding:13px;margin:10px 0}label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}textarea,input{width:100%;background:#0c182a;color:white;border:1px solid #455975;border-radius:10px;padding:11px;font:inherit;font-size:16px}textarea{resize:vertical;min-height:66px}.controls{display:flex;gap:8px;margin-top:9px}button{font:inherit;cursor:pointer;border:0;border-radius:10px;padding:10px 12px;background:#314765;color:white;font-weight:650}button.primary{background:#29b77e;color:#06231b}button:disabled{opacity:.55;cursor:default}.controls button{flex:1}.small{font-size:12px;color:#b4c3d7;margin-top:8px}.pronunciation{font-size:17px;color:#91e9c7;font-weight:650;margin:7px 0 3px;overflow-wrap:anywhere}.audio-row{display:flex;gap:7px;margin:9px 0 3px}.audio-row button{flex:1;font-size:13px;padding:11px 5px}.audio-note{font-size:11px;color:#b4c3d7;margin-top:4px}.target{font-size:27px;font-weight:750;overflow-wrap:anywhere}.written{font-size:25px;min-height:37px;overflow-wrap:anywhere}.prompt{display:flex;align-items:center;justify-content:space-between;gap:12px}.next{background:#126b50;border:2px solid #62f1b7;padding:6px 16px;border-radius:10px;font-size:26px;font-weight:800;min-width:60px;text-align:center}.progress{height:7px;border-radius:8px;background:#35445a;overflow:hidden;margin-top:10px}.progress>div{height:100%;width:0;background:#41d69a;transition:width .15s}.keyboard{background:#26364d;border-radius:15px;padding:5px;margin-top:10px}.row{display:flex;justify-content:center;gap:3px;margin-bottom:4px}.key{flex:1;min-width:0;padding:9px 0 7px;border-radius:7px;background:#edf3fb;color:#152238;min-height:57px;box-shadow:0 2px #9eacc1}.key strong{display:block;font-size:20px;line-height:23px}.key small{display:block;font-size:9px;color:#5b6c81}.key.active{background:#5af0aa;color:#072c20;box-shadow:0 0 0 2px #0b9c67 inset}.key.active small{color:#145e45}.key.wrong{background:#ffabb3}.bottom .key{min-height:42px}.bottom .key strong{font-size:13px}.bottom .space{flex:4}.message{font-size:13px;min-height:19px;color:#ffd38b}.success{color:#70e7ad}.muted{color:#9fb2c9}.tip{font-size:12px;color:#bdcde0}footer{padding:8px 0 20px;font-size:11px;color:#8ca3bf}@media(max-width:400px){body{padding:7px}.card{padding:10px}.key{min-height:51px;padding:7px 0 5px}.key strong{font-size:18px}.key small{font-size:8px}.row{gap:2px}}
+.voice-settings{display:grid;gap:7px;margin:12px 0}.voice-settings select{width:100%;background:#0c182a;color:#fff;border:1px solid #455975;border-radius:10px;padding:10px;font-size:14px}.voice-settings input[type=range]{width:100%;accent-color:#29b77e}.voice-settings label{margin:2px 0 0}.voice-settings output{color:#91e9c7}</style><style>.interpreter-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px}.interpreter-grid button{min-height:55px}.live-result{white-space:pre-wrap;min-height:65px;background:#0c182a;border:1px solid #455975;border-radius:10px;padding:12px;margin-top:9px}.live-caption{font-size:12px;color:#9db2c9;margin-top:8px}.live-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}</style></head><body><main class="app"><h1>🇰🇷 Coreano paso a paso</h1><p>Aprende expresiones útiles, escucha la pronunciación y practica Hangul.</p><section class="card"><label for="es">1. ¿Qué quieres decir?</label><textarea id="es" placeholder="Escribe cualquier palabra o frase en español...">Quiero comer</textarea><div class="controls"><button class="primary" id="translate">🌐 Traducir y practicar</button><button id="swap">↻ Repetir</button></div><div class="message" id="status"></div><div class="small">Las expresiones frecuentes tienen alternativas de uso cotidiano. Para frases nuevas, revisa el significado y el contexto.</div></section><section class="card"><label for="ko">2. Traducción en coreano (editable)</label><textarea id="ko" lang="ko">밥 먹고 싶어요.</textarea><div class="controls"><button id="prepare" class="primary">▶ Preparar teclado</button><button id="copy">Copiar coreano</button></div></section><section class="card"><div class="prompt"><div><label>3. Practica con la guía</label><div class="target" id="target">밥 먹고 싶어요.</div></div><div class="next" id="next">ㅇ</div></div><div class="pronunciation" id="pronunciation" aria-live="polite"></div><div class="audio-row"><button class="primary" id="speak">🔊 Escuchar</button><button id="slow">🐢 Más despacio</button><button id="stopAudio">■ Detener</button></div><div class="voice-settings"><div style="font-weight:600">🎙️ Voz coreana predeterminada</div><label for="speed">Velocidad: <output id="speedValue">0.85×</output></label><input id="speed" type="range" min="0.55" max="1.05" step="0.05" value="0.85"></div><div class="audio-note" id="audioStatus">Pulsa Escuchar. El audio requiere internet o una voz coreana instalada.</div><div class="small" id="counter">0 / 0 teclas</div><div class="progress"><div id="bar"></div></div><label style="margin-top:13px">Lo que has escrito</label><div class="written" id="written">…</div><div class="message" id="feedback"></div><div class="keyboard" id="keyboard"></div><div class="controls"><button id="undo">⌫ Borrar</button><button id="reset">↻ Reiniciar</button><button id="hint">💡 Guía: sí</button></div><p class="tip">La romanización es orientativa y no representa todas las reglas de pronunciación y enlace; escucha el audio para los sonidos reales. Las letras pequeñas muestran las teclas QWERTY de un teclado físico. Usa ⇧ para ㄲ, ㄸ, ㅃ, ㅆ, ㅉ, ㅒ y ㅖ.</p></section><section class="card" id="interpreter"><label>🎙️ Intérprete de voz · Beta gratuita</label><p class="small">Escucha en coreano o español, transcribe y traduce. Utiliza el reconocimiento de voz del navegador y MyMemory; <strong>no es IA avanzada ni interpretación simultánea</strong>. Puede requerir internet y permisos de micrófono. No grabes a otras personas sin su permiso.</p><div class="interpreter-grid"><button class="primary" id="listenKo">🇰🇷 Escuchar coreano</button><button class="primary" id="listenEs">🇵🇪 Hablar español</button></div><div class="live-caption">Lo que escuchó</div><div class="live-result" id="heardText" aria-live="polite">Pulsa un micrófono para empezar.</div><div class="live-caption">Traducción</div><div class="live-result" id="translatedVoice" aria-live="polite">Aquí aparecerá la traducción.</div><div class="live-actions"><button id="stopListening">■ Detener micrófono</button><button id="playTranslation">🔊 Escuchar traducción</button><button id="copyTranslation">Copiar traducción</button></div><div class="message" id="voiceMessage" aria-live="polite"></div><p class="small">Para probar el micrófono en Chrome o Brave, abre esta aplicación desde un enlace HTTPS. El reconocimiento de voz depende de los permisos y compatibilidad de cada navegador. El proveedor del reconocimiento puede procesar el audio en sus servidores.</p></section><section class="card"><label>📱 Compartir y usar</label><div class="small">Este archivo HTML funciona en el navegador y puedes compartirlo. No es un APK. Para instalarlo en la pantalla de inicio como PWA, habría que publicarlo en un sitio HTTPS; desde Descargas puede no aparecer la opción de instalación. El teclado funciona sin conexión, pero la traducción libre y el audio online necesitan internet.</div></section><footer>Colección de expresiones con ajustes lingüísticos preliminares; todavía no revisada íntegramente por un hablante nativo. Las frases no incluidas se traducen mediante MyMemory, un servicio externo que puede producir errores de significado, gramática o registro. Revisa el contexto. No introduzcas información privada. La voz online requiere conexión y envía el texto al proveedor de audio.</footer></main><script>
+'use strict';
+const $=id=>document.getElementById(id);
+const L='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ',V='ㅏㅐㅑㅒㅓㅔㅕㅖㅗㅘㅙㅚㅛㅜㅝㅞㅟㅠㅡㅢㅣ',T=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const vowels={'ㅘ':'ㅗㅏ','ㅙ':'ㅗㅐ','ㅚ':'ㅗㅣ','ㅝ':'ㅜㅓ','ㅞ':'ㅜㅔ','ㅟ':'ㅜㅣ','ㅢ':'ㅡㅣ'};
+const finals={'ㄳ':'ㄱㅅ','ㄵ':'ㄴㅈ','ㄶ':'ㄴㅎ','ㄺ':'ㄹㄱ','ㄻ':'ㄹㅁ','ㄼ':'ㄹㅂ','ㄽ':'ㄹㅅ','ㄾ':'ㄹㅌ','ㄿ':'ㄹㅍ','ㅀ':'ㄹㅎ','ㅄ':'ㅂㅅ'};
+const initialRoman=['g','kk','n','d','tt','r','m','b','pp','s','ss','','j','jj','ch','k','t','p','h'];
+const medialRoman=['a','e','ya','ye','eo','e','yeo','ye','o','wa','we','oe','yo','u','wo','we','wi','yu','eu','ui','i'];
+const finalRoman=['','k','k','k','n','n','n','t','l','k','m','l','l','l','p','l','m','p','p','t','t','ng','t','t','k','t','p','t'];
+function romanizeKorean(s){let out='';for(const ch of s.normalize('NFC')){const n=ch.codePointAt(0)-44032;if(n>=0&&n<11172){const l=Math.floor(n/588),v=Math.floor((n%588)/28),t=n%28;out+=initialRoman[l]+medialRoman[v]+finalRoman[t]}else if(ch===' ')out+=' ';else if('.,!?'.includes(ch))out+=ch;else if(ch==='\n')out+=' / ';else out+=ch}return out.replace(/([,.!?])(?=\S)/g,'$1 ')}
+const shiftMap={'ㅂ':'ㅃ','ㅈ':'ㅉ','ㄷ':'ㄸ','ㄱ':'ㄲ','ㅅ':'ㅆ','ㅐ':'ㅒ','ㅔ':'ㅖ'};
+const rows=[[['ㅂ','Q'],['ㅈ','W'],['ㄷ','E'],['ㄱ','R'],['ㅅ','T'],['ㅛ','Y'],['ㅕ','U'],['ㅑ','I'],['ㅐ','O'],['ㅔ','P']],[['ㅁ','A'],['ㄴ','S'],['ㅇ','D'],['ㄹ','F'],['ㅎ','G'],['ㅗ','H'],['ㅓ','J'],['ㅏ','K'],['ㅣ','L']],[['ㅋ','Z'],['ㅌ','X'],['ㅊ','C'],['ㅍ','V'],['ㅠ','B'],['ㅜ','N'],['ㅡ','M']]];
+let sequence=[],segments=[],position=0,errors=0,shifted=false,guide=true,translating=false;
+function decompose(s){let keys=[],parts=[];for(const char of s.normalize('NFC')){let c=char.codePointAt(0),k=[];if(c>=44032&&c<=55203){const n=c-44032,l=Math.floor(n/588),v=Math.floor(n%588/28),t=n%28;k=[L[l],...(vowels[V[v]]||V[v]),...(finals[T[t]]||(t?T[t]:''))]}else if(L.includes(char)||V.includes(char)||' .,!?'.includes(char)){k=[char]}else if(char==='\n'){k=[' ']}else if('。！？，、'.includes(char)){k=[{'。':'.','！':'!','？':'?','，':',','、':','}[char]]}else if(char==='\r')continue;else throw Error('Carácter no compatible: '+char);keys.push(...k);parts.push({char,count:k.length})}return{keys,parts}}
+function renderKeyboard(){const board=$('keyboard');board.replaceChildren();for(const line of rows){const r=document.createElement('div');r.className='row';for(const [base,latin] of line){const k=shifted&&shiftMap[base]?shiftMap[base]:base;const b=document.createElement('button');b.className='key'+(guide&&(sequence[position]===k||(!shifted&&shiftMap[base]===sequence[position]))?' active':'');b.innerHTML='<strong>'+k+'</strong><small>'+latin+'</small>';b.onclick=()=>tap(k);r.append(b)}board.append(r)}const r=document.createElement('div');r.className='row bottom';for(const [label,k,cls] of [['⇧','SHIFT',''],['Espacio',' ','space'],['?', '?',''],['!', '!',''],['.', '.',''],[',', ',','']]){const b=document.createElement('button');b.className='key '+cls+(guide&&(sequence[position]===k||k==='SHIFT'&&Object.values(shiftMap).includes(sequence[position]))?' active':'');b.innerHTML='<strong>'+label+'</strong>';b.onclick=()=>k==='SHIFT'?(shifted=!shifted,renderKeyboard()):tap(k);r.append(b)}board.append(r)}
+function update(){let n=0,text='';for(const p of segments){n+=p.count;if(n<=position)text+=p.char} $('written').textContent=text||'…';$('counter').textContent=position+' / '+sequence.length+' teclas · '+errors+' errores';$('bar').style.width=(sequence.length?position/sequence.length*100:0)+'%';$('next').textContent=position===sequence.length?'✓':sequence[position]===' '?'␣':sequence[position]==='\n'?'↵':sequence[position]||'—';if(sequence.length&&position===sequence.length){$('feedback').textContent='¡Excelente, we! Completaste la frase 🎉';$('feedback').className='message success'}else{$('feedback').className='message'}renderKeyboard()}
+function prepare(){try{stopSound();const s=$('ko').value.trim();if(!s)throw Error('Escribe o pega una frase en coreano.');const p=decompose(s);sequence=p.keys;segments=p.parts;position=0;errors=0;shifted=false;$('target').textContent=s;$('pronunciation').textContent='🗣 '+(s==='안녕하세요. 좋은 아침이에요.'?'annyeonghaseyo. joeun achimieyo':s==='좋은 아침이에요.'?'joeun achimieyo':romanizeKorean(s));$('feedback').textContent='Pulsa la tecla iluminada.';$('status').textContent='';update()}catch(e){$('status').textContent=e.message+' Puedes quitar ese símbolo o cambiarlo por un punto.'}}
+function tap(k){if(position>=sequence.length)return;if(k===sequence[position]){position++;shifted=false;$('feedback').textContent='Correcto. Continúa.'}else{errors++;$('feedback').textContent='Tecla incorrecta. Pulsa '+(sequence[position]===' '?'ESPACIO':Object.values(shiftMap).includes(sequence[position])&&!shifted?'⇧ y luego '+sequence[position]:sequence[position]);}update()}
+function normalizedSpanish(s){return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[¡!¿?.,;:]+/g,' ').replace(/\s+/g,' ').trim()}
+const reliablePhrases={
+ 'hola buenos dias':'안녕하세요.',
+ 'hola buen dia':'안녕하세요.',
+ 'buenos dias':'안녕하세요.',
+ 'buen dia':'안녕하세요.',
+ 'hola':'안녕하세요.',
+ 'buenas tardes':'안녕하세요.',
+
+ 'muchas gracias':'정말 감사합니다.',
+ 'gracias':'감사합니다.',
+ 'ferrocarril':'철도',
+ 'tren':'기차',
+ 'ya me voy':'이제 갈게요',
+ 'hasta luego':'또 봐요',
+ 'como estas':'잘 지내세요?',
+ 'donde esta la estacion de tren':'기차역이 어디예요?',
+ 'quiero comer':'밥 먹고 싶어요.',
+ 'no quiero comer':'먹고 싶지 않아요.',
+ 'ayer comi pollo frito':'어제 치킨 먹었어요.',
+ 'manana voy a busan':'내일 부산에 갈 거예요.',
+ 'donde puedo comprar una tarjeta de transporte':'교통카드는 어디서 살 수 있어요?',
+ 'quiero comer pero no tengo dinero':'밥 먹고 싶은데 돈이 없어요.',
+ 'puede hablar un poco mas despacio':'조금만 더 천천히 말씀해 주실 수 있어요?',
+ 'no entiendo lo que esta diciendo':'무슨 말씀인지 이해가 안 돼요.',
+ 'este tren va a seomyeon':'이 열차 서면역에 가요?',
+ 'quiero comer pollo frito':'치킨 먹고 싶어요.',
+ 'quiero comer pizza':'피자를 먹고 싶어요.',
+ 'quiero salir a conocer corea':'한국을 둘러보고 싶어요.',
+
+ 'tengo hambre':'배고파요.',
+
+ 'quiero agua':'물 좀 주세요.',
+ 'quiero beber agua':'물 마시고 싶어요.',
+ 'quiero tomar agua':'물 마시고 싶어요.',
+ 'quiero ir al bano':'화장실에 가고 싶어요.',
+ 'donde esta el bano':'화장실이 어디예요?',
+  'cuanto cuesta':'얼마예요?',
+ 'cuanto cuesta esto':'이거 얼마예요?',
+ 'es muy caro':'너무 비싸요.',
+ 'puede ser mas barato':'좀 깎아 주실 수 있어요?',
+ 'no entiendo':'이해가 안 돼요.',
+ 'no hablo coreano':'한국어를 잘 못해요.',
+ 'hablo un poco de coreano':'한국어를 조금 할 줄 알아요.',
+ 'puede hablar mas despacio':'천천히 말씀해 주실 수 있어요?',
+ 'hable mas despacio por favor':'천천히 말씀해 주세요.',
+ 'me puede ayudar':'도와주실 수 있어요?',
+ 'ayudame por favor':'도와주세요.',
+
+ 'disculpe':'실례합니다.',
+
+ 'si':'네.',
+ 'no':'아니요.',
+ 'quiero comprar esto':'이거 사고 싶어요.',
+
+
+ 'estoy cansado':'피곤해요.',
+
+ 'donde estamos':'여기가 어디예요?',
+ 'quiero ir a busan':'부산에 가고 싶어요.',
+ 'quiero ir a ulsan':'울산에 가고 싶어요.',
+ 'voy a comer':'밥 먹으러 갈게요.',
+ 'voy a trabajar':'일하러 갈게요.',
+ 'hasta manana':'내일 봐요.',
+ 'nos vemos manana':'내일 봐요.',
+
+ 'mucho gusto':'만나서 반가워요.'
+};
+function naturalPhrase(normalized){
+ if(Object.prototype.hasOwnProperty.call(reliablePhrases,normalized))return reliablePhrases[normalized];
+ const wanted=normalized.match(/^quiero (?:ir a|viajar a) (busan|ulsan|seul|seoul)$/);
+ if(wanted)return ({busan:'부산',ulsan:'울산',seul:'서울',seoul:'서울'})[wanted[1]]+'에 가고 싶어요.';
+ const place=normalized.match(/^donde esta (?:la|el) (estacion|hospital|farmacia|restaurante)$/);
+ if(place)return ({estacion:'역',hospital:'병원',farmacia:'약국',restaurante:'식당'})[place[1]]+'이 어디예요?';
+ return null;
+}
+function naturalizeServiceResult(result){
+ // Solo ajustes seguros y explícitos: no reescribir automáticamente
+ // conjugaciones ni nombres propios de una traducción arbitraria.
+ const exact={
+ '식사를 하고 싶습니다':'밥 먹고 싶어요.',
+ '식사하고 싶습니다':'밥 먹고 싶어요.',
+ '배가 고픕니다':'배고파요.',
+ '감사드립니다':'감사합니다.',
+ '이것은 얼마입니까?':'이거 얼마예요?',
+ '화장실은 어디입니까?':'화장실이 어디예요?'
+ };
+ return exact[result]||result;
+}
+async function translate(){
+ const input=$('es').value.trim();
+ if(!input){$('status').textContent='Primero escribe una frase en español.';return}
+ if(translating)return;
+ translating=true;$('translate').disabled=true;$('status').textContent='Traduciendo…';
+ try{
+  const normalized=normalizedSpanish(input);
+  const ambiguous={'buenas noches':'Para saludar por la noche: 안녕하세요. Para despedirte de alguien que va a dormir: 안녕히 주무세요.','quiero comida':'Para pedir comida: 먹을 것 좀 주세요. Para expresar ganas de comer: 뭐 좀 먹고 싶어요.','estoy bien':'Para decir que no hay problema: 괜찮아요. Para decir que estás bien en general: 잘 지내요.','me gusta':'Si te gusta algo: 마음에 들어요. Si dices que algo es bueno: 좋아요.','no me gusta':'Si no te agrada algo: 마음에 안 들어요. Si no te entusiasma: 별로예요.','esta bien':'Para decir que no hay problema: 괜찮아요. Para aceptar: 좋아요.','perdon':'Para disculparte: 죄송해요. Para llamar la atención: 실례합니다.'};
+  if(ambiguous[normalized]){$('status').textContent='⚠️ Depende del contexto. '+ambiguous[normalized]+' Elige una opción y pégala en el campo coreano.';return;}
+  let result=naturalPhrase(normalized);
+  let local=Boolean(result);
+  if(!result){
+   const u='https://api.mymemory.translated.net/get?q='+encodeURIComponent(input)+'&langpair=es|ko';
+   const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),12000);
+   let data;
+   try{const res=await fetch(u,{signal:controller.signal});if(!res.ok)throw Error('El servicio no respondió');data=await res.json()}finally{clearTimeout(timer)}
+   result=(data.responseData&&data.responseData.translatedText||'').trim();
+   if(!result||Number(data.responseStatus)>=400||/MYMEMORY WARNING|QUERY LENGTH LIMIT|PLEASE SELECT/i.test(result))throw Error('Traducción no disponible ahora');
+   if(!/[가-힣]/.test(result))throw Error('El servicio no devolvió texto coreano');
+   // Conservar resultado original para revisión explícita; no afirmar corrección.
+   // Evita aceptar respuestas evidentemente incompletas en saludos compuestos.
+   if(/\bhola\b/i.test(normalized)&&/\bbuenos? dias\b/i.test(normalized)&&normalizedSpanish(result)==='')throw Error('Respuesta incompleta');
+  }
+  $('ko').value=result;prepare();
+  $('status').textContent=local?'✓ Expresión habitual de la colección didáctica; comprueba el contexto.':'Traducción automática · Revisa el contexto y el nivel de cortesía.';
+ }catch(e){$('status').textContent='No se pudo traducir ('+e.message+'). Puedes escribir el coreano en el campo de abajo.'}
+ finally{translating=false;$('translate').disabled=false}
+}
+let remoteAudio=null, audioAttempt=0;
+function stopSound(){
+ audioAttempt++;
+ if(remoteAudio){remoteAudio.pause();remoteAudio.removeAttribute('src');remoteAudio=null}
+ if('speechSynthesis' in window)window.speechSynthesis.cancel();
+}
+function localSpeech(rate,attempt){
+ if(attempt!==audioAttempt)return;
+ if(!('speechSynthesis' in window)){$('audioStatus').textContent='No hay voz disponible. Comprueba internet.';return}
+ const voices=window.speechSynthesis.getVoices().filter(v=>v.lang.toLowerCase().startsWith('ko'));
+ if(!voices.length){$('audioStatus').textContent='El audio online no respondió y no hay voz coreana instalada.';return}
+ const utterance=new SpeechSynthesisUtterance($('ko').value.trim());
+ utterance.voice=voices[0];utterance.lang='ko-KR';utterance.rate=rate;
+ utterance.onstart=()=>{if(attempt===audioAttempt)$('audioStatus').textContent='🔊 Voz coreana de respaldo del celular.'};
+ utterance.onerror=()=>{if(attempt===audioAttempt)$('audioStatus').textContent='No se pudo reproducir el audio.'};
+ window.speechSynthesis.speak(utterance);
+}
+function speak(rate){
+ const content=$('ko').value.trim();if(!content)return;
+ stopSound();
+ const attempt=audioAttempt, status=$('audioStatus');
+ const url='https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=ko&q='+encodeURIComponent(content.slice(0,180));
+ const audio=new Audio(url);remoteAudio=audio;audio.playbackRate=rate;
+ let failed=false;
+ function fallback(){
+  if(failed||attempt!==audioAttempt)return;
+  failed=true;remoteAudio=null;status.textContent='Audio online no disponible; buscando voz de respaldo…';
+  localSpeech(rate,attempt);
+ }
+ audio.onplaying=()=>{if(attempt===audioAttempt)status.textContent='🔊 Reproduciendo voz coreana · '+rate.toFixed(2)+'×'};
+ audio.onended=()=>{if(attempt===audioAttempt){remoteAudio=null;status.textContent='Listo. Puedes escuchar de nuevo.'}};
+ audio.onerror=fallback;
+ audio.play().catch(fallback);
+}
+$('speak').onclick=()=>speak(Number($('speed').value));
+$('slow').onclick=()=>speak(Math.max(.55,Number($('speed').value)-.15));
+$('stopAudio').onclick=()=>{stopSound();$('audioStatus').textContent='Audio detenido.'};
+$('translate').onclick=translate;$('prepare').onclick=prepare;$('swap').onclick=()=>{position=0;errors=0;$('feedback').textContent='';update()};$('reset').onclick=()=>{position=0;errors=0;shifted=false;$('feedback').textContent='';update()};$('undo').onclick=()=>{position=Math.max(0,position-1);$('feedback').textContent='';update()};$('hint').onclick=()=>{guide=!guide;$('hint').textContent='💡 Guía: '+(guide?'sí':'no');update()};$('copy').onclick=async()=>{try{await navigator.clipboard.writeText($('ko').value);$('status').textContent='Texto copiado.'}catch{$('ko').focus();$('ko').select();$('status').textContent='Texto seleccionado. Mantén pulsado y elige Copiar.'}};
+
+// V16 beta: voz gratuita del navegador + traducción automática, sin prometer IA.
+let activeRecognition=null, lastTranslated='', lastTargetLang='es', recognitionBusy=false;
+const SpeechRecognitionFree=window.SpeechRecognition||window.webkitSpeechRecognition;
+function voiceMessage(message){$('voiceMessage').textContent=message}
+function stopListening(){if(activeRecognition){try{activeRecognition.stop()}catch(e){}activeRecognition=null}recognitionBusy=false}
+async function translateSpoken(text,source){
+ const target=source==='ko'?'es':'ko';lastTargetLang=target;
+ $('translatedVoice').textContent='Traduciendo…';
+ try{
+  let result='';
+  if(source==='es')result=naturalPhrase(normalizedSpanish(text))||'';
+  if(!result){
+   const controller=new AbortController(), timer=setTimeout(()=>controller.abort(),12000);
+   try{
+    const u='https://api.mymemory.translated.net/get?q='+encodeURIComponent(text)+'&langpair='+source+'|'+target;
+    const res=await fetch(u,{signal:controller.signal});if(!res.ok)throw Error('Servicio no disponible');
+    const data=await res.json();result=String(data.responseData?.translatedText||'').trim();
+    if(!result||Number(data.responseStatus)>=400||/MYMEMORY WARNING|QUERY LENGTH LIMIT/i.test(result))throw Error('Sin traducción');
+   }finally{clearTimeout(timer)}
+  }
+  lastTranslated=result;$('translatedVoice').textContent=result;
+  voiceMessage('Traducción automática: verifica el sentido antes de usarla.');
+  if(target==='ko'){$('ko').value=result;try{prepare()}catch(e){}}
+ }catch(e){lastTranslated='';$('translatedVoice').textContent='No se pudo traducir.';voiceMessage('Error: '+e.message)}
+}
+function startListening(source){
+ if(!window.isSecureContext){voiceMessage('Abre la aplicación desde un enlace HTTPS. Los archivos de Descargas pueden bloquear el micrófono.');return}
+ if(!SpeechRecognitionFree){voiceMessage('Este navegador no ofrece reconocimiento de voz compatible. Prueba Chrome actualizado.');return}
+ stopListening();
+ const rec=new SpeechRecognitionFree();activeRecognition=rec;recognitionBusy=true;
+ rec.lang=source==='ko'?'ko-KR':'es-PE';rec.interimResults=true;rec.continuous=false;rec.maxAlternatives=1;
+ $('heardText').textContent='🎙️ Escuchando…';$('translatedVoice').textContent='Esperando voz…';voiceMessage('Habla ahora.');
+ let finalText='';
+ rec.onresult=(event)=>{let partial='';for(let i=event.resultIndex;i<event.results.length;i++){const phrase=event.results[i][0].transcript;if(event.results[i].isFinal)finalText+=phrase+' ';else partial+=phrase} $('heardText').textContent=(finalText+partial).trim()||'Escuchando…'};
+ rec.onerror=(event)=>{const messages={'not-allowed':'Acceso al micrófono denegado. Revisa el permiso del sitio en Chrome/Brave y en Android.','service-not-allowed':'El servicio de reconocimiento está bloqueado por el navegador.','network':'El reconocimiento necesita conexión o el servicio no responde.','no-speech':'No se detectó voz. Intenta hablar más cerca.','audio-capture':'No se pudo acceder al micrófono del dispositivo.'};voiceMessage(messages[event.error]||('Error de reconocimiento: '+event.error));recognitionBusy=false};
+ rec.onend=()=>{if(activeRecognition===rec)activeRecognition=null;recognitionBusy=false;const text=finalText.trim();if(text)translateSpoken(text,source);else if($('heardText').textContent==='🎙️ Escuchando…')voiceMessage('No se detectó voz. Vuelve a intentarlo.')};
+ try{rec.start()}catch(e){voiceMessage('No se pudo activar: '+e.message);stopListening()}
+}
+$('listenKo').onclick=()=>startListening('ko');$('listenEs').onclick=()=>startListening('es');
+$('stopListening').onclick=()=>{stopListening();voiceMessage('Micrófono detenido.')};
+$('playTranslation').onclick=()=>{if(!lastTranslated){voiceMessage('Primero traduce una frase.');return}if(!('speechSynthesis' in window)){voiceMessage('No hay voz disponible en este navegador.');return}speechSynthesis.cancel();const utterance=new SpeechSynthesisUtterance(lastTranslated);utterance.lang=lastTargetLang==='ko'?'ko-KR':'es-ES';utterance.rate=.85;speechSynthesis.speak(utterance)};
+$('copyTranslation').onclick=async()=>{if(!lastTranslated)return;try{await navigator.clipboard.writeText(lastTranslated);voiceMessage('Traducción copiada.')}catch(e){voiceMessage('No se pudo copiar automáticamente. Mantén pulsado el texto para copiarlo.')}};
+
+prepare();
+</script></body></html>
